@@ -93,6 +93,19 @@ sub new {
     return $self;
 }
 
+#
+# PRIVATE METHODS
+#
+sub _uri_for {
+    my ( $self, $action, @options ) = @_;
+    my $uri = URI->new();
+    $uri->scheme( $self->secure ? 'https' : 'http' );
+    $uri->host( $self->server );
+    $uri->path( join '/', $self->prefix || (),
+        'mailman', $action, $self->list, @options );
+    return $uri;
+}
+
 1;
 
 __END__
