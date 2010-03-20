@@ -106,6 +106,37 @@ sub _uri_for {
     return $uri;
 }
 
+sub _login_form {
+    my ($self) = @_;
+    my $mech = $self->robot;
+
+    # shortcut
+    return if !$mech->forms;
+
+    my $form;
+
+    # login is required if the form asks for:
+    # - a login/password
+    if ( $form = $mech->form_with_fields('password') ) {
+        $form->value( email    => $self->email );
+        $form->value( password => $self->password );
+    }
+
+    # - an admin (or moderator) password
+    elsif ( $form = $mech->form_with_fields('adminpw') ) {
+        $form->value(
+            adminpw => $self->admin_password || $self->moderator_password
+        );
+    }
+
+    # no authentication required
+    else {
+        $form = undef;
+    }
+
+    return $form;
+}
+
 1;
 
 __END__
