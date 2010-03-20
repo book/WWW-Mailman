@@ -144,6 +144,20 @@ sub _login_form {
     return $form;
 }
 
+sub _load_uri {
+    my ( $self, $uri ) = @_;
+    my $mech = $self->robot;
+    $mech->get($uri);
+
+    # authentication required?
+    if ( my $form = $self->_login_form ) {
+        $mech->request( $form->click );
+        croak "Couldn't login on $uri" if $self->_login_form;
+    }
+
+    # we're on!
+}
+
 1;
 
 __END__
