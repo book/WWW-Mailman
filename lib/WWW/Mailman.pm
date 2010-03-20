@@ -3,50 +3,46 @@ package WWW::Mailman;
 use warnings;
 use strict;
 
-=head1 NAME
-
-WWW::Mailman - The great new WWW::Mailman!
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
-
 our $VERSION = '0.01';
 
+1;
+
+__END__
+
+=head1 NAME
+
+WWW::Mailman - Interact with Mailman's web interface from a Perl program
 
 =head1 SYNOPSIS
 
-Quick summary of what the module does.
-
-Perhaps a little code snippet.
-
     use WWW::Mailman;
 
-    my $foo = WWW::Mailman->new();
-    ...
+    my $mm = WWW::Mailman->new(
 
-=head1 EXPORT
+        # the smallest bit of information we need
+        url      => 'http://lists.example.com/mailman/listinfo/example',
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
+        # TIMTOWTDI
+        server   => 'lists.example.com',
+        list     => 'example',
 
-=head1 FUNCTIONS
+        # user / authentication / authorization
+        email    => 'user@example.com',
+        password => 'roses',              # needed for user actions
+        moderator_password => 'Fl0wers',  # needed for moderator actions
+        admin_password     => 's3kr3t',   # needed for action actions
 
-=head2 function1
+        # use cookies for quicker authentication
+        cookie_file => "$ENV{HOME}/.mailmanrc",
 
-=cut
+    );
 
-sub function1 {
-}
+    # authentication is automated, so just point to the page you want
 
-=head2 function2
+=head1 DESCRIPTION
 
-=cut
 
-sub function2 {
-}
+=head1 METHODS
 
 =head1 AUTHOR
 
@@ -93,15 +89,17 @@ L<http://search.cpan.org/dist/WWW-Mailman>
 
 =head1 ACKNOWLEDGEMENTS
 
+My first attempt to control Mailman with C<WWW::Mechanize> is described
+in French at L<http://articles.mongueurs.net/magazines/linuxmag58.html#h3>.
 
-=head1 COPYRIGHT & LICENSE
+=head1 COPYRIGHT
 
 Copyright 2010 Philippe Bruhat (BooK), all rights reserved.
+
+=head1 LICENSE
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
-
 =cut
 
-1; # End of WWW::Mailman
