@@ -13,7 +13,7 @@ our $VERSION = '0.01';
 my @attributes = qw(
     secure server prefix list
     email password moderator_password admin_password
-    robot cookie_file
+    robot
 );
 
 #
@@ -78,17 +78,24 @@ sub new {
     $self->$_( delete $args{$_} )
         for grep { exists $args{$_} } @attributes, 'uri';
 
-    # bring in the robot
-    my %mech_options = (
-        agent => "WWW::Mailman/$VERSION",
-        stack_depth => 2,    # make it a Bear of Very Little Brain
-    );
-    $mech_options{cookie_jar} = HTTP::Cookies->new(
-        file           => $self->cookie_file,
-        autosave       => 1,
-        ignore_discard => 1, # Promise me you'll never forget me
-    ) if $self->cookie_file;
-    $self->robot( WWW::Mechanize->new(%mech_options) );
+    # bring in the robot if needed
+    if ( !$self->robot ) {
+        my %mech_options = (
+            agent => "WWW::Mailman/$VERSION",
+            stack_depth => 2,    # make it a Bear of Very Little Brain
+            quiet       => 1,
+        );
+        $mech_options{cookie_jar} = HTTP::Cookies->new(
+            file => delete $args{cookie_file},
+            ignore_discard => 1,    # Promise me you'll never forget me
+            autosave       => 1,
+        ) if exists $args{cookie_file};
+        $self->robot( WWW::Mechanize->new(%mech_options) );
+    }
+
+    # some unknown parameters remain
+    croak "Unknown constructor parameters: @{ [ keys %args ] }"
+        if keys %args;
 
     return $self;
 }
@@ -175,6 +182,82 @@ WWW::Mailman - Interact with Mailman's web interface from a Perl program
 
 
 =head1 METHODS
+
+=head2 Constructor
+
+The C<new()> method returns a new C<WWW::Mailman> object. It accepts all
+accessors (see below) as parameters.
+
+Extra parameters:
+
+=over 4
+
+=item cookie_file
+
+If the I<robot> paramater is not given, the constructor will automatically
+provide one (this is usually the best choice). If I<cookie_file> is provided,
+the provided robot will read cookies from this file, and save them afterwards.
+
+Using a cookie file will make your scripts faster, as the robot will not
+have to fill in and post the authentication form.
+
+=back
+
+=head2 Accessors / Mutators
+
+C<WWW::Mailman> supports the following accessors to its attributes:
+
+=over 4
+
+=item secure
+
+Get or set the I<secure> parameter which, if true, indicates the Mailman
+URL is accessible via the I<https> scheme.
+
+=item server
+
+Get or set the I<server> part of the web interface.
+
+=item prefix
+
+Get or set the I<prefix> part of the web interface.
+(For the rare case when Mailman is not run from the top-level C</mailman/>
+URL.)
+
+=item list
+
+Get or set the I<list> name.
+
+=item uri
+
+When used as an accessor, get the default I<listinfo> URI for the list.
+
+When used as a mutator, set the I<secure>, I<server>, I<prefix> and I<list>
+attributes based on the given URI.
+
+=item email
+
+Get or set the user's I<email>.
+
+=item password
+
+Get or set the user's I<password>.
+
+=item moderator_password
+
+Get or set the I<moderator password>.
+
+=item admin_password
+
+Get or set the I<administrator password>.
+
+=item robot
+
+Get or set the C<WWW::Mechanize> object used to access the Mailman
+web interface.
+
+
+=back
 
 =head1 AUTHOR
 
