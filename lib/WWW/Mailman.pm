@@ -158,6 +158,36 @@ sub _load_uri {
     # we're on!
 }
 
+#
+# INTERNAL UTILITY FUNCTIONS
+#
+sub _form_data {
+    return {
+        map {
+            $_->type eq 'submit' || $_->readonly
+                ? ()    # ignore buttons and read-only inputs
+                : ( $_->name => $_->value )
+            } $_[0]->inputs
+    };
+}
+
+#
+# ACTIONS
+#
+
+sub options {
+    my ( $self, $options ) = @_;
+    my $mech = $self->robot;
+    $self->_load_uri( $self->_uri_for( 'options', $self->email ) );
+
+    # select the options form
+    $mech->form_with_fields('fullname');
+
+    # TODO: change of options
+
+    return _form_data( $mech->current_form );
+}
+
 1;
 
 __END__
