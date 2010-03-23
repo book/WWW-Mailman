@@ -278,7 +278,15 @@ WWW::Mailman - Interact with Mailman's web interface from a Perl program
 
     );
 
-    # authentication is automated, so just point to the page you want
+    # authentication is automated, no need to think about it
+
+    # user options: get / change / update
+    my $options = $mm->options();
+    $options->{nodupes} = 0;
+    $mm->options( $options );
+
+    # just change one item
+    $mm->options( { digest => 1 } );
 
 =head1 DESCRIPTION
 
@@ -403,11 +411,46 @@ Unsubscribe the user from this mailing-list.
 The parameter C<unsubconfirm> must be set to B<1> for the unsubscription
 to be acted upon.
 
+=item othersubs( )
+
+Returns a list of Mailman-managed mailing-lists, that this user is
+subscribed to on the same Mailman instance.
+
 =item emailpw( )
 
 Request the password to be emailed to the user.
 
 =back
+
+
+=head1 EXAMPLES
+
+See the distribution's F<eg/> directory for more examples.
+
+Here's a script to update one's options across a number of mailing-lists:
+
+    #!/usr/bin/perl
+    use strict;
+    use warnings;
+    use WWW::Mailman;
+    use YAML::Tiny qw( LoadFile );
+
+    # some useful files
+    my %opts  = ( cookie_file => 'mailman.cookie' );
+    my $lists = LoadFile('mailman.yml');
+
+    # mailman.yml looks like this:
+    # ---
+    # - uri: http://lists.example.com/mailman/listinfo/example
+    #   email: user@example.com
+    #   password: s3kr3t
+
+    # I want to receive duplicates!
+    for my $list (@$lists) {
+        my $mm = WWW::Mailman->new( %opts, %$list );
+        $mm->options( { nodupes => 0 } );
+    }
+
 
 =head1 AUTHOR
 
