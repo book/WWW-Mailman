@@ -238,10 +238,20 @@ sub _form_data {
 # emailpw doesn't need any parameter
 sub emailpw {
     my ($self) = @_;
+
+    # no auto-authenticate
     my $mech = $self->robot;
-    $self->_load_uri( $self->_uri_for( 'options', $self->email ) );
-    $mech->form_with_fields('fullname');
-    $mech->click('emailpw');
+    $mech->get( my $uri = $self->_uri_for( 'options', $self->email ) );
+
+    if ( $mech->form_with_fields('emailpw') ) {
+        $mech->click('emailpw');
+    }
+    elsif ( $mech->form_with_fields('login-remind') ) {
+        $mech->click('login-remind');
+    }
+    else {
+        croak "Unable to find a password email form on $uri";
+    }
 }
 
 # othersubs needs some parsing to be useful
@@ -449,6 +459,8 @@ this method may return an empty list (this is a bug in Mailman's interface).
 =item emailpw( )
 
 Request the password to be emailed to the user.
+
+This method doesn't require authentication.
 
 =back
 
