@@ -31,9 +31,14 @@ my @tests = (
     ],
 );
 
+my @fails = (
+    [ 'http://lists.example.com/' => q{^Invalid URL !uri: no 'mailman' segment } ],
+    [ 'http://lists.example.com/mailman/' => q{^Invalid URL !uri: no action } ],
+);
+
 my @attr = qw( secure server prefix list );
 
-plan tests => ( @attr + 1 ) * @tests;
+plan tests => ( @attr + 1 ) * @tests + 2 * @fails;
 
 for my $test (@tests) {
     my ( $uri, $expected ) = @$test;
@@ -51,3 +56,11 @@ for my $test (@tests) {
         is( $m->$attr, $expected->{$attr}, "$attr for $uri" );
     }
 }
+
+for my $fail (@fails ) {
+    my ($uri, $regexp) = @$fail;
+    $regexp =~ s/!uri/\Q$uri\E/;
+    ok( ! eval { WWW::Mailman->new( uri => $uri ); }, "new() fails for $uri" );
+    like( $@, qr/$regexp/, 'Expected error message' );
+}
+
