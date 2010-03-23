@@ -244,6 +244,18 @@ sub emailpw {
     $mech->click('emailpw');
 }
 
+# othersubs needs some parsing to be useful
+sub othersubs {
+    my ($self) = @_;
+    my $mech = $self->robot;
+    $self->_load_uri( $self->_uri_for( 'options', $self->email ) );
+    $mech->form_with_fields('fullname');
+    $mech->click('othersubs');
+
+    my $uri = $mech->uri;
+    return
+        map { URI->new_abs( $_, $uri ) }
+        $mech->content =~ m{<li><a href="([^"]+)">[^<]+</a>}g;
 }
 
 1;
@@ -430,6 +442,9 @@ to be acted upon.
 
 Returns a list of Mailman-managed mailing-lists, that this user is
 subscribed to on the same Mailman instance.
+
+B<Note:> if you're logged in as an admin (or have an admin cookie),
+this method may return an empty list (this is a bug in Mailman's interface).
 
 =item emailpw( )
 
