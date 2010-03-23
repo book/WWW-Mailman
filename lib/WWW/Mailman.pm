@@ -41,8 +41,9 @@ sub uri {
         my @prefix;
         push @prefix, shift @segments
             while @segments && $segments[0] ne 'mailman';
+        my $segment = shift @segments || '';
         croak "Invalid URL $uri: no 'mailman' segment"
-            if shift @segments ne 'mailman';
+            if $segment ne 'mailman';
         croak "Invalid URL $uri: no action"
             if !shift @segments;
 
