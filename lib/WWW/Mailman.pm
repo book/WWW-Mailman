@@ -132,9 +132,8 @@ sub _login_form {
 
     # - an admin (or moderator) password
     elsif ( $form = $mech->form_with_fields('adminpw') ) {
-        $form->value(
-            adminpw => $self->admin_password || $self->moderator_password
-        );
+        $form->value( adminpw => $self->admin_password
+                || $self->moderator_password );
     }
 
     # no authentication required
