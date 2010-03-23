@@ -175,17 +175,75 @@ sub _form_data {
 # ACTIONS
 #
 
-sub options {
-    my ( $self, $options ) = @_;
+# The option form has 5 submit buttons, listed here with their inputs:
+#
+# * change-of-address:
+#   - new-address
+#   - confirm-address
+#   - fullname
+#   - changeaddr-globally
+# * unsub:
+#   - unsubconfirm
+# * othersubs
+# * emailpw
+# * changepw:
+#   - newpw
+#   - confpw
+#   - pw-globally
+# * options-submit:
+#   - disablemail
+#   - deliver-globally
+#   - digest
+#   - mime
+#   - mime-globally
+#   - dontreceive
+#   - ackposts
+#   - remind
+#   - remind-globally
+#   - conceal
+#   - rcvtopic
+#   - nodupes
+#   - nodupes-globally
+
+# most routines will be identical, so generate them:
+{
+    my %options = (
+        address  => 'change-of-address',
+        unsub    => 'unsub',
+        changepw => 'changepw',
+        options  => 'options-submit',
+    );
+    while ( my ( $method, $button ) = each %options ) {
+        no strict 'refs';
+        *$method = sub {
+            my ( $self, $options ) = @_;
+
+            # select the options form
+            my $mech = $self->robot;
+            $self->_load_uri( $self->_uri_for( 'options', $self->email ) );
+            $mech->form_with_fields('fullname');
+
+            # change of options
+            if ($options) {
+                $mech->set_fields(%$options);
+                $mech->click($button);
+                $mech->form_with_fields('fullname');
+            }
+
+            return _form_data( $mech->current_form );
+        };
+    }
+}
+
+# emailpw doesn't need any parameter
+sub emailpw {
+    my ($self) = @_;
     my $mech = $self->robot;
     $self->_load_uri( $self->_uri_for( 'options', $self->email ) );
-
-    # select the options form
     $mech->form_with_fields('fullname');
+    $mech->click('emailpw');
+}
 
-    # TODO: change of options
-
-    return _form_data( $mech->current_form );
 }
 
 1;
