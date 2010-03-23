@@ -290,13 +290,28 @@ WWW::Mailman - Interact with Mailman's web interface from a Perl program
 
 =head1 DESCRIPTION
 
+C<WWW::Mailman> is a module to control B<Mailman> (as a subscriber,
+moderator or administrator) without the need of a web browser.
+
+The module handles authentication transparently and can take advantage
+of stored cookies to speed it up.
+
+It is meant as a building block for your own Mailman-managing scripts,
+and will include more routines in the future.
+
 
 =head1 METHODS
 
 =head2 Constructor
 
+=over 4
+
+=item new( %options )
+
 The C<new()> method returns a new C<WWW::Mailman> object. It accepts all
 accessors (see below) as parameters.
+
+=back
 
 Extra parameters:
 
@@ -499,6 +514,10 @@ L<http://search.cpan.org/dist/WWW-Mailman>
 
 My first attempt to control Mailman with C<WWW::Mechanize> is described
 in French at L<http://articles.mongueurs.net/magazines/linuxmag58.html#h3>.
+
+I'm not the only that would like to avoid using a
+web interface to interact with mailing-list software:
+L<http://www.jwz.org/doc/mailman.html>
 
 =head1 COPYRIGHT
 
