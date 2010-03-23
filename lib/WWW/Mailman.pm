@@ -358,6 +358,54 @@ Get or set the I<administrator password>.
 Get or set the C<WWW::Mechanize> object used to access the Mailman
 web interface.
 
+=back
+
+
+=head1 ACTION METHODS
+
+C<WWW::Mailman> is used to interact with Mailman through its web
+inteface. Most of the useful methods are therefore related to
+the web interface itself.
+
+=head2 Options
+
+Note that since Mailman's C<options> form has six submit buttons,
+each of them managing only a subset of this form's input fields,
+the handling of this form has been split in six different routines.
+
+=over 4
+
+=item options( [ \%options ] )
+
+Get the user options as a reference to a hash.
+
+If an hash reference is passed as parameter, the given options will
+be updated.
+
+=item address( [ \%options ] )
+
+Change the user email address (when reading, the field is empty)
+and real name.
+
+Parameters are: C<new-address>, C<confirm-address>, C<fullname>
+and C<changeaddr-globally>.
+
+=item changepw( [ \%options ] )
+
+Change the user password for the mailing list.
+
+Parameters are: C<newpw>, C<confpw> and C<pw-globally>.
+
+=item unsub( [ \%options ] )
+
+Unsubscribe the user from this mailing-list.
+
+The parameter C<unsubconfirm> must be set to B<1> for the unsubscription
+to be acted upon.
+
+=item emailpw( )
+
+Request the password to be emailed to the user.
 
 =back
 
