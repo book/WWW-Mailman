@@ -56,11 +56,7 @@ sub uri {
 
     # create a generic listinfo URL
     else {
-        $uri = URI->new();
-        $uri->scheme( $self->secure ? 'https' : 'http' );
-        $uri->host( $self->server );
-        $uri->path( join '/', $self->prefix, 'mailman', 'listinfo',
-            $self->list );
+        $uri = $self->_uri_for('listinfo');
     }
     return $uri;
 }
