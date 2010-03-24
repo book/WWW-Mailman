@@ -11,7 +11,7 @@ use HTTP::Cookies;
 our $VERSION = '0.01';
 
 my @attributes = qw(
-    secure server prefix list
+    secure server prefix list userinfo
     email password moderator_password admin_password
     robot
 );
@@ -50,6 +50,7 @@ sub uri {
         # just keep the bits we need
         $self->server( $uri->host );
         $self->secure( $uri->scheme eq 'https' );
+        $self->userinfo( $uri->userinfo );
         $self->prefix( join '/', @prefix );
         $self->list( shift @segments );
     }
@@ -104,6 +105,7 @@ sub _uri_for {
     my ( $self, $action, @options ) = @_;
     my $uri = URI->new();
     $uri->scheme( $self->secure ? 'https' : 'http' );
+    $uri->userinfo( $self->userinfo );
     $uri->host( $self->server );
     $uri->path( join '/', $self->prefix || (),
         'mailman', $action, $self->list, @options );
