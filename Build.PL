@@ -10,8 +10,10 @@ my $builder = Module::Build->new(
     build_requires => {
         'Test::More' => 0,
     },
+    requires => {
+        'WWW::Mechanize' => '1.00',
+    },
     add_to_cleanup      => [ 'WWW-Mailman-*' ],
-    create_makefile_pl => 'traditional',
 );
 
 $builder->create_build_script();
