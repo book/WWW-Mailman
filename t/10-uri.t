@@ -4,32 +4,22 @@ use Test::More;
 
 use WWW::Mailman;
 
-my @tests = (
-    [   'http://lists.example.com/mailman/admin/example/' => {
-            uri    => 'http://lists.example.com/mailman/listinfo/example',
-            secure => '',
-            server => 'lists.example.com',
-            prefix => '',
-            list   => 'example',
-        }
-    ],
-    [   'https://lists.example.com/mailman/admin/example/' => {
-            uri    => 'https://lists.example.com/mailman/listinfo/example',
-            secure => 1,
-            server => 'lists.example.com',
-            prefix => '',
-            list   => 'example',
-        }
-    ],
-    [   'http://lists.example.com/prefix/mailman/admin/example/' => {
-            uri => 'http://lists.example.com/prefix/mailman/listinfo/example',
-            secure => '',
-            server => 'lists.example.com',
-            prefix => 'prefix',
-            list   => 'example',
-        }
-    ],
-);
+# generate all possible combinations
+my @tests = map {
+    my $u1 = my $u2
+        = ( $_->{secure} ? 'https' : 'http' ) . '://'
+        . $_->{server}
+        . ( $_->{prefix} ? '/' : '' )
+        . $_->{prefix}
+        . '/mailman';
+    $u2 = $u1;
+    $u1 .= '/admin/' . $_->{list};
+    $u2 .= '/listinfo/' . $_->{list};
+    [ $u1 => { %$_, uri => $u2 } ]
+    }
+    map { ( { %$_, secure => '' }, { %$_, secure => 1 } ) }
+    map { ( { %$_, prefix => '' }, { %$_, prefix => 'prefix' } ) }
+    { server => 'lists.example.com', list => 'example' };
 
 my @fails = (
     [ 'http://lists.example.com/' => q{^Invalid URL !uri: no 'mailman' segment } ],
