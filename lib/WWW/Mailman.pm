@@ -105,7 +105,8 @@ sub _uri_for {
     my ( $self, $action, @options ) = @_;
     my $uri = URI->new();
     $uri->scheme( $self->secure ? 'https' : 'http' );
-    $uri->userinfo( $self->userinfo );
+    $uri->userinfo( $self->userinfo )
+        if $self->userinfo;
     $uri->host( $self->server );
     $uri->path( join '/', $self->prefix || (),
         'mailman', $action, $self->list, @options );
