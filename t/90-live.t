@@ -44,7 +44,7 @@ plan skip_all => 'Need at least a uri parameter for live tests'
 plan tests => my $tests;
 
 # some useful variables
-my ( $mm, $url, $got, $expected );
+my ( $mm, $url, $got, $expected, @subs );
 
 # this is pure lazyness
 sub mm {
@@ -95,3 +95,10 @@ SKIP: {
     BEGIN { $tests += $count = 5 }
 }
 
+# check other subscriptions
+SKIP: {
+    $mm = mm( my $count, qw( email password ) );
+    ok( eval { @subs = $mm->othersubs(); 1 }, 'othersubs() passes' );
+    cmp_ok( scalar @subs, '>=', 1, 'At least one subscription' );
+    BEGIN { $tests += $count = 2 }
+}
