@@ -8,17 +8,19 @@ use WWW::Mailman;
 my @tests = map {
     my $u1 = my $u2
         = ( $_->{secure} ? 'https' : 'http' ) . '://'
+        . $_->{userinfo}
+        . ( $_->{userinfo} ? '@' : '' )
         . $_->{server}
         . ( $_->{prefix} ? '/' : '' )
         . $_->{prefix}
         . '/mailman';
-    $u2 = $u1;
     $u1 .= '/admin/' . $_->{list};
     $u2 .= '/listinfo/' . $_->{list};
     [ $u1 => { %$_, uri => $u2 } ]
     }
-    map { ( { %$_, secure => '' }, { %$_, secure => 1 } ) }
-    map { ( { %$_, prefix => '' }, { %$_, prefix => 'prefix' } ) }
+    map { ( { %$_, secure   => '' }, { %$_, secure   => 1 } ) }
+    map { ( { %$_, prefix   => '' }, { %$_, prefix   => 'prefix' } ) }
+    map { ( { %$_, userinfo => '' }, { %$_, userinfo => 'user:s3kr3t' } ) }
     { server => 'lists.example.com', list => 'example' };
 
 my @fails = (
@@ -26,7 +28,7 @@ my @fails = (
     [ 'http://lists.example.com/mailman/' => q{^Invalid URL !uri: no action } ],
 );
 
-my @attr = qw( secure server prefix list );
+my @attr = qw( secure server userinfo prefix list );
 
 plan tests => ( @attr + 1 ) * @tests + 2 * @fails;
 
@@ -36,7 +38,7 @@ for my $test (@tests) {
 
     # create from the parts and check the URI
     $m = WWW::Mailman->new();
-    $m->$_( $expected->{$_} ) for @attr;
+    $m->$_( $expected->{$_} ) for grep { $expected->{$_} } @attr;
     is( $m->uri, $expected->{uri}, $expected->{uri} );
 
     # create from the URI and check the parts
