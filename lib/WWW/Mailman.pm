@@ -218,7 +218,8 @@ sub _form_data {
 
             # select the options form
             my $mech = $self->robot;
-            $self->_load_uri( $self->_uri_for( 'options', $self->email ) );
+            $self->_load_uri(
+                $self->_uri_for( 'options', $self->email || '' ) );
             $mech->form_with_fields('fullname');
 
             # change of options
