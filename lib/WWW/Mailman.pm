@@ -365,6 +365,15 @@ URL is accessible via the I<https> scheme.
 
 Get or set the I<server> part of the web interface.
 
+=item userinfo
+
+Get or set the I<userinfo> parameter for servers requesting authentication
+to access the Mailman interface.
+
+This is a string made up of the login and password joined by a colon (C<:>).
+
+Note that the URI object returned by C<uri()> will show this information.
+
 =item prefix
 
 Get or set the I<prefix> part of the web interface.
@@ -377,7 +386,8 @@ Get or set the I<list> name.
 
 =item uri
 
-When used as an accessor, get the default I<listinfo> URI for the list.
+When used as an accessor, get the default I<listinfo> URI for the list,
+returned as a C<URI> object.
 
 When used as a mutator, set the I<secure>, I<server>, I<prefix> and I<list>
 attributes based on the given URI.
