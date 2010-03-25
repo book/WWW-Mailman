@@ -1,5 +1,12 @@
 Revision history for WWW-Mailman
 
-0.01    Date/time
-        First version, released on an unsuspecting world.
+1.00    Thu Mar 25 10:27:28 CET 2010
+        [FEATURES]
+        - basic features: constructor, accessors
+        - autologin, cookie management
+        - options(), othersubs(), changepw(), emailpw(), unsub()
+        [TESTS]
+        - live tests with working credentials if provided
+        - numerous examples scripts in eg/
+        - 94% coverage (with live tests)
 
