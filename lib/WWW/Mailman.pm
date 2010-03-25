@@ -25,7 +25,7 @@ for my $attr (@attributes) {
     no strict 'refs';
     *{$attr} = sub {
         my $self = shift;
-        return defined $self->{$attr} ? $self->{$attr} : ''  if !@_;
+        return defined $self->{$attr} ? $self->{$attr} : '' if !@_;
         return $self->{$attr} = shift;
     };
 }
