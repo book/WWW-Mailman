@@ -107,13 +107,20 @@ SKIP: {
 SKIP: {
     $mm = mm( my $count, qw( email ) );
     diag "You may receive password reminders for @{[$mm->list]}. Sorry.";
-    ok( eval { @subs = $mm->emailpw(); 1 }, 'emailpw() without password' );
+    ok( eval { $mm->emailpw(); 1 }, 'emailpw() without password' );
     BEGIN { $tests += $count = 1 }
 }
 
 SKIP: {
     $mm = mm( my $count, qw( email password ) );
-    ok( eval { @subs = $mm->emailpw(); 1 }, 'emailpw()' );
+    ok( eval { $mm->emailpw(); 1 }, 'emailpw()' );
     BEGIN { $tests += $count = 1 }
+}
+
+SKIP: {
+    $mm = mm( my $count, qw( email password ) );
+    ok( eval { $mm->options(); 1 }, 'login through options()' );
+    ok( eval { $mm->emailpw(); 1 }, 'emailpw() when logged in' );
+    BEGIN { $tests += $count = 2 }
 }
 
