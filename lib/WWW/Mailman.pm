@@ -447,7 +447,7 @@ web interface.
 =head1 ACTION METHODS
 
 C<WWW::Mailman> is used to interact with Mailman through its web
-inteface. Most of the useful methods are therefore related to
+inteface. Most of the useful methods in this module are therefore related to
 the web interface itself.
 
 =head2 Options
@@ -499,6 +499,10 @@ this method may return an empty list (this is a bug in Mailman's interface).
 Request the password to be emailed to the user.
 
 This method doesn't require authentication.
+
+=head2 Other methods
+
+=over 4
 
 =item roster( )
 
