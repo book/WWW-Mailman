@@ -268,6 +268,34 @@ sub othersubs {
         $mech->content =~ m{<li><a href="([^"]+)">[^<]+</a>}g;
 }
 
+sub roster {
+    my ( $self, %options ) = @_;
+    my $mech = $self->robot;
+    $self->_load_uri( $self->_uri_for('roster') );
+
+    # try to detect authentication issues [private_roster]
+    if ( $mech->content !~ /<li>/ ) {
+
+        # authenticate through listinfo
+        $mech->get( $self->_uri_for('listinfo') );
+        my $form = $mech->form_with_fields('roster-pw');
+
+        # in case the roster is reserved to admins,
+        # we'll try the admin passwords first
+        my $password = $self->admin_password || $self->moderator_password;
+        $mech->set_fields( 'roster-email' => $self->email ) if !$password;
+        $mech->set_fields( 'roster-pw' => $password || $self->password );
+        $mech->click('SubscriberRoster');
+    }
+
+    # subscriber list may be empty, e.g. for privacy reasons
+    return
+
+        # TODO: distinguishes types of subscribers
+        map { s/ at /@/; $_ }    # [obscure_addresses]
+        $mech->content =~ m{<li><a href[^>]*>([^<]*)</a>}g;
+}
+
 1;
 
 __END__
@@ -471,6 +499,14 @@ this method may return an empty list (this is a bug in Mailman's interface).
 Request the password to be emailed to the user.
 
 This method doesn't require authentication.
+
+=item roster( )
+
+Request the list of subscribers to the mailing-list.
+Authentication is not required, but maybe be used.
+
+Note that the list may be empty, depending on the level of authentication
+available and the privacy settings of the list.
 
 =back
 
