@@ -71,7 +71,7 @@ BEGIN { $tests += 2 }
 # options() for our user
 SKIP: {
     $mm = mm( my $count, qw( email password ) );
-    ok( eval { $got = $mm->options() }, 'options() passes with credentials' );
+    ok( eval { $got = $mm->options() }, 'options() with credentials' );
     is( ref $got, 'HASH', 'options returned as a HASH ref' );
     ok( exists $got->{$_}, "options have key '$_'" ) for my @keys;
 
@@ -84,7 +84,7 @@ SKIP: {
 # try changing an option
 SKIP: {
     $mm = mm( my $count, qw( email password ) );
-    ok( eval { $got = $mm->options() }, 'options() passes' );
+    ok( eval { $got = $mm->options() }, 'options()' );
     my $new = ( my $old = $got->{conceal} ) ? '0' : '1';
     ok( eval { $got = $mm->options( { conceal => $new } ) },
         "options( { conceal => $new } ) passes" );
@@ -98,7 +98,22 @@ SKIP: {
 # check other subscriptions
 SKIP: {
     $mm = mm( my $count, qw( email password ) );
-    ok( eval { @subs = $mm->othersubs(); 1 }, 'othersubs() passes' );
+    ok( eval { @subs = $mm->othersubs(); 1 }, 'othersubs()' );
     cmp_ok( scalar @subs, '>=', 1, 'At least one subscription' );
     BEGIN { $tests += $count = 2 }
 }
+
+# check email resend
+SKIP: {
+    $mm = mm( my $count, qw( email ) );
+    diag "You may receive password reminders for @{[$mm->list]}. Sorry.";
+    ok( eval { @subs = $mm->emailpw(); 1 }, 'emailpw() without password' );
+    BEGIN { $tests += $count = 1 }
+}
+
+SKIP: {
+    $mm = mm( my $count, qw( email password ) );
+    ok( eval { @subs = $mm->emailpw(); 1 }, 'emailpw()' );
+    BEGIN { $tests += $count = 1 }
+}
+
