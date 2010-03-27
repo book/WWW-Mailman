@@ -500,6 +500,8 @@ Request the password to be emailed to the user.
 
 This method doesn't require authentication.
 
+=back
+
 =head2 Other methods
 
 =over 4
