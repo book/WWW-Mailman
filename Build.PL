@@ -13,6 +13,11 @@ my $builder = Module::Build->new(
     requires => {
         'WWW::Mechanize' => '1.00',
     },
+    meta_merge => {
+        resources => {
+            repository => 'http://github.com/book/WWW-Mailman',
+        },
+    },
     add_to_cleanup      => [ 'WWW-Mailman-*' ],
 );
 

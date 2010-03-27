@@ -12,6 +12,12 @@ WriteMakefile(
         'Test::More' => 0,
         'WWW::Mechanize' => '1.00',
     },
+    META_MERGE => {
+        resources => {
+            repository => 'http://github.com/book/WWW-Mailman',
+        },
+    },
+
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean               => { FILES => 'WWW-Mailman-*' },
 );

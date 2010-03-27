@@ -568,6 +568,12 @@ You can also look for information at:
 
 =over 4
 
+=item * One of the official repositories:
+
+L<http://github.com/book/WWW-Mailman>
+
+L<http://git.bruhat.net/cgi-bin/gitweb.cgi/WWW-Mailman.git>
+
 =item * RT: CPAN's request tracker
 
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=WWW-Mailman>
