@@ -124,3 +124,22 @@ SKIP: {
     BEGIN { $tests += $count = 2 }
 }
 
+# check roster (with some power user access, just in case access is restricted)
+SKIP: {
+    $mm = mm( my $count, qw( email password moderator_password ) );
+    my @emails;
+    ok( eval { @emails = $mm->roster(); 1 }, 'roster()' );
+    ok( scalar( grep { $_ eq $option{email} } @emails ),
+        'roster has at least our email' );
+    BEGIN { $tests += $count = 2 }
+}
+
+SKIP: {
+    $mm = mm( my $count, qw( email password admin_password ) );
+    my @emails;
+    ok( eval { @emails = $mm->roster(); 1 }, 'roster()' );
+    ok( scalar( grep { $_ eq $option{email} } @emails ),
+        'roster has at least our email' );
+    BEGIN { $tests += $count = 2 }
+}
+
