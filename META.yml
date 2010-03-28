@@ -1,12 +1,13 @@
 ---
 name: WWW-Mailman
-version: 1.00
+version: 1.01
 author:
   - 'Philippe Bruhat (BooK) <book@cpan.org>'
 abstract: Interact with Mailman's web interface from a Perl program
 license: perl
 resources:
   license: http://dev.perl.org/licenses/
+  repository: http://github.com/book/WWW-Mailman
 requires:
   WWW::Mechanize: 1.00
 build_requires:
@@ -14,7 +15,7 @@ build_requires:
 provides:
   WWW::Mailman:
     file: lib/WWW/Mailman.pm
-    version: 1.00
+    version: 1.01
 generated_by: Module::Build version 0.33
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html

@@ -1,6 +1,10 @@
 Revision history for WWW-Mailman
 
-1.00    Thu Mar 25 10:27:28 CET 2010
+1.01 Sun Mar 28 11:17:38 CEST 2010
+        [FEATURES]
+        - new method: roster()
+
+1.00 Thu Mar 25 10:27:28 CET 2010
         [FEATURES]
         - basic features: constructor, accessors
         - autologin, cookie management
