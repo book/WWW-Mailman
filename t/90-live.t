@@ -150,3 +150,32 @@ SKIP: {
     BEGIN { $tests += $count = 2 }
 }
 
+# check some boolean admin options
+SKIP: {
+    $mm = mm( my $count, qw( admin_password ) );
+    my %admin;
+    for my $section ( keys %admin ) {
+        my $method = "admin_$section";
+        ok( eval { $got = $mm->$method() }, "admin_$section()" );
+        my $new = ( my $old = $got->{ $admin{$section} } ) ? '0' : '1';
+        ok( eval { $got = $mm->$method( { $admin{$section} => $new } ) },
+            "$method( { $admin{$section} => $new } ) passes"
+        );
+        is( $got->{ $admin{$section} },
+            $new, "Changed the value of '$admin{$section}' option" );
+        ok( eval { $got = $mm->$method( { $admin{$section} => $old } ) },
+            "$method( { $admin{$section} => $old } ) passes"
+        );
+        is( $got->{ $admin{$section} },
+            $old, "Changed back the value of '$admin{$section}' option" );
+    }
+
+    BEGIN {
+        %admin = (
+            general => 'send_reminders',
+            bounce  => 'bounce_processing',
+        );
+        $tests += $count = 5 * keys %admin;
+    }
+}
+
