@@ -35,12 +35,18 @@ else {
     }
 }
 
+# a number of cases where we can't do live tests
 plan skip_all => 'No credentials available for live tests'
     if !keys %option;
 
 plan skip_all => 'Need at least a uri parameter for live tests'
     if !exists $option{uri};
 
+plan skip_all => 'Need web access for live tests'
+    if !WWW::Mechanize->new( autocheck => 0 )->get( $option{uri} )
+        ->is_success();
+
+# we can do live tests!
 plan tests => my $tests;
 
 # some useful variables
