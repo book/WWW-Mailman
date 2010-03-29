@@ -50,7 +50,7 @@ plan skip_all => 'Need web access for live tests'
 plan tests => my $tests;
 
 # some useful variables
-my ( $mm, $url, $got, $expected, @subs );
+my ( $mm, $url, $got, $expected, $conceal, @subs );
 
 # this is pure lazyness
 sub mm {
@@ -98,6 +98,7 @@ SKIP: {
     ok( eval { $got = $mm->options( { conceal => $old } ) },
         "options( { conceal => $old } ) passes" );
     is( $got->{conceal}, $old, "Changed back the value of 'conceal' option" );
+    $conceal = $got->{conceal};
     BEGIN { $tests += $count = 5 }
 }
 
@@ -133,6 +134,7 @@ SKIP: {
 # check roster (with some power user access, just in case access is restricted)
 SKIP: {
     $mm = mm( my $count, qw( email password moderator_password ) );
+    skip "Can't test roster() if our email is concealed", $count if $conceal;
     my @emails;
     ok( eval { @emails = $mm->roster(); 1 }, 'roster()' );
     ok( scalar( grep { $_ eq $option{email} } @emails ),
@@ -141,11 +143,10 @@ SKIP: {
 }
 
 SKIP: {
-    $mm = mm( my $count, qw( email password admin_password ) );
+    $mm = mm( my $count, qw( admin_password ) );
     my @emails;
     ok( eval { @emails = $mm->roster(); 1 }, 'roster()' );
-    ok( scalar( grep { $_ eq $option{email} } @emails ),
-        'roster has at least our email' );
+    ok( scalar( grep {/\@/} @emails ), 'roster has at least one email' );
     BEGIN { $tests += $count = 2 }
 }
 
