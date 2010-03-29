@@ -1,8 +1,21 @@
 Revision history for WWW-Mailman
 
+1.02 Tue Mar 30 00:04:34 CEST 2010
+        [FEATURES]
+        - new method: admin()
+        - admin() is the entry point for a bunch of other methods:
+          admin_archive(), admin_autoreply(), admin_bounce(),
+          admin_contentfilter(), admin_digest(), admin_gateway(),
+          admin_general(), admin_language(), admin_nondigest(),
+          admin_passwords(), admin_topics()
+        [TESTS]
+        - live test for some admin methods
+
 1.01 Sun Mar 28 11:17:38 CEST 2010
         [FEATURES]
         - new method: roster()
+        [TESTS]
+        - live test for roster()
 
 1.00 Thu Mar 25 10:27:28 CET 2010
         [FEATURES]

@@ -8,7 +8,7 @@ use URI;
 use WWW::Mechanize;
 use HTTP::Cookies;
 
-our $VERSION = '1.01';
+our $VERSION = '1.02';
 
 my @attributes = qw(
     secure server prefix list userinfo
