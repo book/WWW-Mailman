@@ -296,6 +296,37 @@ sub roster {
         $mech->content =~ m{<li><a href[^>]*>([^<]*)</a>}g;
 }
 
+# most admin routines will be identical...
+sub admin {
+    my ( $self, $section, $options ) = @_;
+    my $mech = $self->robot;
+    $self->_load_uri( $self->_uri_for( admin => $section ) );
+
+    # get the main form
+    $mech->form_number(1);
+
+    # change of options
+    if ($options) {
+        $mech->set_fields(%$options);
+        $mech->click();
+        $mech->form_number(1);
+    }
+
+    return _form_data( $mech->current_form );
+}
+
+# so, use a bit of currying
+for my $section (
+    qw(
+    general passwords language nondigest digest
+    bounce archive gateway autoreply contentfilter topics
+    )
+    )
+{
+    no strict 'refs';
+    *{"admin_$section"} = sub { shift->admin( "$section", @_ ) }
+}
+
 1;
 
 __END__
@@ -501,6 +532,71 @@ Request the password to be emailed to the user.
 This method doesn't require authentication.
 
 =back
+
+=head2 Admin methods
+
+The following admin methods all have the same interface.
+
+Without parameter, they return the requested options as a reference to a hash.
+If an hash reference is passed as parameter, the given options will
+be updated.
+
+The admin methods are:
+
+=over 4
+
+=item admin_general( [ \%options ] )
+
+Fundamental list characteristics, including descriptive info and basic behaviors.
+
+=item admin_passwords( [ \%options ] )
+
+Change list ownership passwords.
+
+=item admin_language( [ \%options ] )
+
+Natural language (internationalization) options.
+
+=item admin_nondigest( [ \%options ] )
+
+Policies concerning immediately delivered list traffic.
+
+=item admin_digest( [ \%options ] )
+
+Batched-delivery digest characteristics.
+
+=item admin_bounce( [ \%options ] )
+
+The policies that control the automatic bounce processing system in Mailman.
+
+=item admin_archive( [ \%options ] )
+
+List traffic archival policies.
+
+=item admin_gateway( [ \%options ] )
+
+Mail-to-News and News-to-Mail gateway services.
+
+=item admin_autoreply( [ \%options ] )
+
+Auto-responder characteristics.
+
+=item admin_contentfilter( [ \%options ] )
+
+Policies concerning the content of list traffic.
+
+=item admin_topics( [ \%options ] )
+
+List topic keywords.
+
+=back
+
+These methods are actually curryied from the generic C<admin()> method
+and can be called directly like this:
+
+    # identical ways to set general options:
+    $mm->admin_general($options);
+    $mm->admin( general => $options );
 
 =head2 Other methods
 
