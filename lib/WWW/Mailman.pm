@@ -589,14 +589,16 @@ Policies concerning the content of list traffic.
 
 List topic keywords.
 
-=back
+=item admin( $section [, \%options ] )
 
-These methods are actually curryied from the generic C<admin()> method
+The above methods are actually curryied from the generic C<admin()> method
 and can be called directly like this:
 
     # identical ways to set general options:
     $mm->admin_general($options);
     $mm->admin( general => $options );
+
+=back
 
 =head2 Other methods
 
