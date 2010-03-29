@@ -641,6 +641,26 @@ Here's a script to update one's options across a number of mailing-lists:
         $mm->options( { nodupes => 0 } );
     }
 
+=head2 Useful trick
+
+All the methods that return a hashref with a set of form fields values
+(C<options()>, C<admin_general()>, etc.) also set the current form
+of the C<WWW::Mailman>'s robot to that form.
+
+This allows you to dump the form, for example if you want to see what
+the possible values are for a given form:
+
+    my $mm = WWW::Mailman->new( %args );
+    $mm->admin_archive();
+    print $mm->robot->current_form->dump;
+
+Which will output:
+
+    POST http://lists.example.com/mailman/admin/example/archive
+      archive=1                      (radio)    [0/No|*1/Yes]
+      archive_private=1              (radio)    [0/public|*1/private]
+      archive_volume_frequency=1     (radio)    [0/Yearly|*1/Monthly|2/Quarterly|3/Weekly|4/Daily]
+      submit=Submit Your Changes     (submit)
 
 =head1 AUTHOR
 
