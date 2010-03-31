@@ -11,9 +11,8 @@ use HTTP::Cookies;
 our $VERSION = '1.02';
 
 my @attributes = qw(
-    secure server prefix list userinfo
+    secure server prefix list
     email password moderator_password admin_password
-    robot
 );
 
 #
@@ -62,6 +61,34 @@ sub uri {
     return $uri;
 }
 
+sub userinfo {
+    my $self = shift;
+    return defined $self->{userinfo} ? $self->{userinfo} : '' if !@_;
+    $self->{userinfo} = my $userinfo = shift;
+
+    # update the credentials stored in the robot
+    if ( $self->robot ) {
+        if ($userinfo) {
+            $self->robot->credentials( split /:/, $userinfo, 2 );
+        }
+        else {
+            $self->robot->clear_credentials();
+        }
+    }
+
+    return $userinfo;
+}
+
+sub robot {
+    my $self = shift;
+    return defined $self->{robot} ? $self->{robot} : '' if !@_;
+    $self->{robot} = shift;
+    $self->userinfo( $self->userinfo );    # update credentials
+    return $self->{robot};
+}
+
+push @attributes, qw( uri userinfo robot );
+
 #
 # CONSTRUCTOR
 #
@@ -74,7 +101,7 @@ sub new {
 
     # get attributes
     $self->$_( delete $args{$_} )
-        for grep { exists $args{$_} } @attributes, 'uri';
+        for grep { exists $args{$_} } @attributes;
 
     # bring in the robot if needed
     if ( !$self->robot ) {
