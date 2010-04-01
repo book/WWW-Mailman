@@ -4,6 +4,7 @@ eg/mm_emailpw
 eg/mm_nodupes
 eg/mm_options
 eg/mm_othersubs
+eg/mm_roster
 eg/README
 lib/WWW/Mailman.pm
 Makefile.PL

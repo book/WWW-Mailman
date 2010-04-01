@@ -1,5 +1,11 @@
 Revision history for WWW-Mailman
 
+1.03 Thu Apr  1 23:20:14 CEST 2010
+        [IMPROVEMENTS]
+        - better support for sites behind HTTP authentication
+        [EXAMPLES]
+        - mm_roster (forgotten in v1.01)
+
 1.02 Tue Mar 30 00:04:34 CEST 2010
         [FEATURES]
         - new method: admin()
@@ -22,6 +28,8 @@ Revision history for WWW-Mailman
         - basic features: constructor, accessors
         - autologin, cookie management
         - options(), othersubs(), changepw(), emailpw(), unsub()
+        [EXAMPLES]
+        - mm_othersubs, mm_emailpw, mm_options, mm_nodupes
         [TESTS]
         - live tests with working credentials if provided
         - numerous examples scripts in eg/
