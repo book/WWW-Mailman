@@ -1,5 +1,9 @@
 Revision history for WWW-Mailman
 
+1.04 Tue Apr  6 21:13:27 CEST 2010
+        [PACKAGING]
+        - more accurate prerequites
+
 1.03 Thu Apr  1 23:20:14 CEST 2010
         [IMPROVEMENTS]
         - better support for sites behind HTTP authentication
