@@ -10,7 +10,7 @@ WriteMakefile(
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => 0,
-        'WWW::Mechanize' => '1.00',
+        'WWW::Mechanize' => '1.52',
     },
     META_MERGE => {
         resources => {

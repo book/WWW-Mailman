@@ -11,7 +11,7 @@ my $builder = Module::Build->new(
         'Test::More' => 0,
     },
     requires => {
-        'WWW::Mechanize' => '1.00',
+        'WWW::Mechanize' => '1.52',
     },
     meta_merge => {
         resources => {
