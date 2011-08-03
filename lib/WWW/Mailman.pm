@@ -369,7 +369,7 @@ WWW::Mailman - Interact with Mailman's web interface from a Perl program
     my $mm = WWW::Mailman->new(
 
         # the smallest bit of information we need
-        url      => 'http://lists.example.com/mailman/listinfo/example',
+        uri      => 'http://lists.example.com/mailman/listinfo/example',
 
         # TIMTOWTDI
         server   => 'lists.example.com',
