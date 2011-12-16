@@ -11,7 +11,7 @@ use HTTP::Cookies;
 our $VERSION = '1.04';
 
 my @attributes = qw(
-    secure server prefix list
+    secure server prefix root list
     email password moderator_password admin_password
 );
 
@@ -35,14 +35,14 @@ sub uri {
     if ($uri) {
         $uri = URI->new($uri);
 
-        # @segments = @prefix, 'mailman', $action, $list, @suffix
+        # @segments = @prefix, $self->{root}, $action, $list, @suffix
         my ( undef, @segments ) = $uri->path_segments;
         my @prefix;
         push @prefix, shift @segments
-            while @segments && $segments[0] ne 'mailman';
+            while @segments && $segments[0] ne $self->{root};
         my $segment = shift @segments || '';
-        croak "Invalid URL $uri: no 'mailman' segment"
-            if $segment ne 'mailman';
+        croak "Invalid URL $uri: no '$self->{root}' segment"
+            if $segment ne $self->{root};
         croak "Invalid URL $uri: no action"
             if !shift @segments;
 
@@ -103,12 +103,16 @@ sub new {
     $self->$_( delete $args{$_} )
         for grep { exists $args{$_} } @attributes;
 
+    $self->{root} = 'mailman'
+        if !defined $self->{root};
+
     # bring in the robot if needed
     if ( !$self->robot ) {
         my %mech_options = (
             agent => "WWW::Mailman/$VERSION",
             stack_depth => 2,    # make it a Bear of Very Little Brain
             quiet       => 1,
+            autocheck   => 0,    # Fancy my making a mistake like that
         );
         $mech_options{cookie_jar} = HTTP::Cookies->new(
             file => delete $args{cookie_file},
@@ -136,7 +140,7 @@ sub _uri_for {
         if $self->userinfo;
     $uri->host( $self->server );
     $uri->path( join '/', $self->prefix || (),
-        'mailman', $action, $self->list, @options );
+        $self->{root}, $action, $self->list, @options );
     return $uri;
 }
 
