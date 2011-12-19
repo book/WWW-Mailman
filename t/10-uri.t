@@ -21,6 +21,7 @@ my @tests = map {
     map { ( { %$_, secure   => '' }, { %$_, secure   => 1 } ) }
     map { ( { %$_, prefix   => '' }, { %$_, prefix   => 'prefix' } ) }
     map { ( { %$_, userinfo => '' }, { %$_, userinfo => 'user:s3kr3t' } ) }
+    map { ( { %$_, root     => '' }, { %$_, root     => 'lists' } ) }
     { server => 'lists.example.com', list => 'example' };
 
 my @fails = (
