@@ -99,12 +99,12 @@ sub new {
     # create the object
     my $self = bless {}, $class;
 
-    # get attributes
+    # we need a default value for 'root'
+    $args{root} = 'mailman' if !exists $args{root};
+
+    # get the rest of attributes
     $self->$_( delete $args{$_} )
         for grep { exists $args{$_} } @attributes;
-
-    $self->{root} = 'mailman'
-        if !defined $self->{root};
 
     # bring in the robot if needed
     if ( !$self->robot ) {
@@ -140,7 +140,7 @@ sub _uri_for {
         if $self->userinfo;
     $uri->host( $self->server );
     $uri->path( join '/', $self->prefix || (),
-        $self->{root}, $action, $self->list, @options );
+        $self->root, $action, $self->list, @options );
     return $uri;
 }
 
