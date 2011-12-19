@@ -109,6 +109,7 @@ sub new {
             agent => "WWW::Mailman/$VERSION",
             stack_depth => 2,    # make it a Bear of Very Little Brain
             quiet       => 1,
+            autocheck   => 0,    # Fancy my making a mistake like that
         );
         $mech_options{cookie_jar} = HTTP::Cookies->new(
             file => delete $args{cookie_file},
