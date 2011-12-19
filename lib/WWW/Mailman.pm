@@ -335,6 +335,7 @@ sub admin {
 
     # change of options
     if ($options) {
+        $mech->current_form->accept_charset('iso-8859-1');
         $mech->set_fields(%$options);
         $mech->click();
         $mech->form_number(1);
