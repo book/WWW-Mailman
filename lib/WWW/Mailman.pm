@@ -354,6 +354,35 @@ for my $section (
     *{"admin_$section"} = sub { shift->admin( "$section", @_ ) }
 }
 
+# first shot to get the list of members
+# will return an ARRAY ref of hashes.
+# Each HASH has two keys:  email and realname
+sub list_members {
+    my ( $self ) = @_;
+    my $uri = $self->_uri_for( admin => 'members' );
+
+    my $mech = $self->robot;
+    $self->_load_uri( "$uri/list" );
+    my @sections = $mech->content =~ m{$uri\?findmember=\&letter=(.)}g;
+
+    my @members;
+    foreach my $sect (@sections) {
+        $mech->get( "$uri?letter=$sect&chunk=0" );
+        my ($form) = $mech->forms;
+        foreach my $i ($form->inputs) {
+            if ($i->name =~ /(.*)_realname$/) {
+               push @members, {
+                   email => $1,
+                   realname => $i->value,
+               }
+           }
+        }
+    }
+
+    return \@members;
+}
+
+
 1;
 
 __END__
