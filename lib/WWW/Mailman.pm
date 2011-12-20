@@ -11,7 +11,7 @@ use HTTP::Cookies;
 our $VERSION = '1.04';
 
 my @attributes = qw(
-    secure server prefix root list
+    secure server prefix program list
     email password moderator_password admin_password
 );
 
@@ -35,14 +35,15 @@ sub uri {
     if ($uri) {
         $uri = URI->new($uri);
 
-        # @segments = @prefix, $self->{root}, $action, $list, @suffix
+        # @segments = @prefix, $program, $action, $list, @suffix
+        my $program = $self->program;
         my ( undef, @segments ) = $uri->path_segments;
         my @prefix;
         push @prefix, shift @segments
-            while @segments && $segments[0] ne $self->{root};
+            while @segments && $segments[0] ne $program;
         my $segment = shift @segments || '';
-        croak "Invalid URL $uri: no '$self->{root}' segment"
-            if $segment ne $self->{root};
+        croak "Invalid URL $uri: no '$program' segment"
+            if $segment ne $program;
         croak "Invalid URL $uri: no action"
             if !shift @segments;
 
@@ -99,8 +100,8 @@ sub new {
     # create the object
     my $self = bless {}, $class;
 
-    # we need a default value for 'root'
-    $args{root} = 'mailman' if !exists $args{root};
+    # we need a default value for 'program'
+    $args{program} = 'mailman' if !exists $args{program};
 
     # get the rest of attributes
     $self->$_( delete $args{$_} )
@@ -140,7 +141,7 @@ sub _uri_for {
         if $self->userinfo;
     $uri->host( $self->server );
     $uri->path( join '/', $self->prefix || (),
-        $self->root, $action, $self->list, @options );
+        $self->program, $action, $self->list, @options );
     return $uri;
 }
 
@@ -338,6 +339,7 @@ sub admin {
 
     # change of options
     if ($options) {
+        $mech->current_form->accept_charset('iso-8859-1');
         $mech->set_fields(%$options);
         $mech->click();
         $mech->form_number(1);
@@ -469,6 +471,11 @@ Note that the URI object returned by C<uri()> will show this information.
 Get or set the I<prefix> part of the web interface.
 (For the rare case when Mailman is not run from the top-level C</mailman/>
 URL.)
+
+=item program
+
+Get or set the I<program> name. The default is C<mailman>.
+Some servers define it to something else (e.g. SourceForge uses C<lists>.
 
 =item list
 
