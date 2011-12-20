@@ -15,6 +15,8 @@ my @attributes = qw(
     email password moderator_password admin_password
 );
 
+my $action_re = qr/^(?:admin(?:db)?|edithtml|listinfo|options|private)$/;
+
 #
 # ACCESSORS / MUTATORS
 #
@@ -39,13 +41,28 @@ sub uri {
         my $program = $self->program;
         my ( undef, @segments ) = $uri->path_segments;
         my @prefix;
-        push @prefix, shift @segments
-            while @segments && $segments[0] ne $program;
-        my $segment = shift @segments || '';
-        croak "Invalid URL $uri: no '$program' segment"
-            if $segment ne $program;
-        croak "Invalid URL $uri: no action"
-            if !shift @segments;
+
+        # the program name is found in the url
+        if( grep $_ eq $program, @segments ) {
+            push @prefix, shift @segments
+                while @segments && $segments[0] ne $program;
+            shift @segments;    # drop the program name
+            croak "Invalid URL $uri: no action"
+                if !shift @segments;
+        }
+
+        # try to autodetect the program name
+        elsif( grep $_ =~ $action_re, @segments ) {
+            push @prefix, shift @segments
+                while @segments && $segments[0] !~ $action_re;
+            $self->program( pop @prefix );    # get the program name
+            shift @segments;    # drop the action name
+        }
+
+        # declare FAIL
+        else {
+            croak "Invalid URL $uri: no program segment found ($program)";
+        }
 
         # just keep the bits we need
         $self->server( $uri->host );
@@ -476,6 +493,9 @@ URL.)
 
 Get or set the I<program> name. The default is C<mailman>.
 Some servers define it to something else (e.g. SourceForge uses C<lists>.
+
+WWW::Mailman should usually be able to guess it. If not, you'll need
+to pass the C<program> parameter to the constructor, as a hint.
 
 =item list
 
