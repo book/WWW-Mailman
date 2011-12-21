@@ -182,6 +182,11 @@ sub _load_uri {
         croak "Couldn't login on $uri" if $self->_login_form;
     }
 
+    # get the version if we don't have it yet
+    $self->{version} = $1
+        if !exists $self->{version}
+            && $mech->content =~ /<br>version (\d+\.\d+\.\d+\w*)</;
+
     # we're on!
 }
 
@@ -354,6 +359,15 @@ for my $section (
 {
     no strict 'refs';
     *{"admin_$section"} = sub { shift->admin( "$section", @_ ) }
+}
+
+sub version {
+    my ($self) = @_;
+    return $self->{version} if exists $self->{version};
+
+    # get it as part of a page download
+    $self->_load_uri( $self->_uri_for('listinfo') );
+    return $self->{version};
 }
 
 1;
@@ -640,6 +654,13 @@ Authentication is not required, but maybe be used.
 
 Note that the list may be empty, depending on the level of authentication
 available and the privacy settings of the list.
+
+=item version( )
+
+Returm the Mailman version as printed at the bottom of all pages.
+
+Whenever WWW::Mailman downloads a Mailman web page, it tries to obtain
+this version information.
 
 =back
 
