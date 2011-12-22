@@ -5,7 +5,19 @@ use Test::More;
 use WWW::Mailman;
 
 # generate all possible combinations
-my @tests = map {
+my @tests =
+    [   'https://lists.sourceforge.net/lists/listinfo/backuppc-users/' => {
+            secure   => 1,
+            userinfo => '',
+            server   => 'lists.sourceforge.net',
+            prefix   => '',
+            program  => 'lists',
+            list     => 'backuppc-users',
+            uri =>
+                'https://lists.sourceforge.net/lists/listinfo/backuppc-users',
+        }
+    ],
+    map {
     my $u1 = my $u2
         = ( $_->{secure} ? 'https' : 'http' ) . '://'
         . $_->{userinfo}
@@ -33,7 +45,7 @@ my @fails = (
     ],
 );
 
-my @attr = qw( secure server userinfo prefix list );
+my @attr = qw( secure server userinfo prefix program list );
 
 plan tests => ( @attr + 1 ) * @tests + 2 * @fails;
 
