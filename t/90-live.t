@@ -59,6 +59,12 @@ sub mm {
     WWW::Mailman->new( map { $_ => $option{$_} } 'uri', @_ );
 }
 
+# get the version
+$mm = mm();
+like( $mm->version, qr/^\d+\.\d+\.\d+\w*$/, "Version looks fine" );
+diag "Mailman version " . $mm->version;
+BEGIN { $tests += 1 }
+
 # options() fails with no email
 $mm = mm();
 ok( !eval { $mm->options() }, 'options() fails with no credentials' );
