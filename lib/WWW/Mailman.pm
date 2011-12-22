@@ -11,9 +11,13 @@ use HTTP::Cookies;
 our $VERSION = '1.04';
 
 my @attributes = qw(
-    secure server prefix list
+    secure server prefix program list
     email password moderator_password admin_password
 );
+
+my %default = ( program => 'mailman' );
+
+my $action_re = qr/^(?:admin(?:db)?|edithtml|listinfo|options|private)$/;
 
 #
 # ACCESSORS / MUTATORS
@@ -24,7 +28,8 @@ for my $attr (@attributes) {
     no strict 'refs';
     *{$attr} = sub {
         my $self = shift;
-        return defined $self->{$attr} ? $self->{$attr} : '' if !@_;
+        return defined $self->{$attr} ? $self->{$attr} : $default{$attr} || ''
+            if !@_;
         return $self->{$attr} = shift;
     };
 }
@@ -35,16 +40,32 @@ sub uri {
     if ($uri) {
         $uri = URI->new($uri);
 
-        # @segments = @prefix, 'mailman', $action, $list, @suffix
+        # @segments = @prefix, $program, $action, $list, @suffix
+        my $program = $self->program;
         my ( undef, @segments ) = $uri->path_segments;
         my @prefix;
-        push @prefix, shift @segments
-            while @segments && $segments[0] ne 'mailman';
-        my $segment = shift @segments || '';
-        croak "Invalid URL $uri: no 'mailman' segment"
-            if $segment ne 'mailman';
-        croak "Invalid URL $uri: no action"
-            if !shift @segments;
+
+        # the program name is found in the url
+        if( grep $_ eq $program, @segments ) {
+            push @prefix, shift @segments
+                while @segments && $segments[0] ne $program;
+            shift @segments;    # drop the program name
+            croak "Invalid URL $uri: no action"
+                if !shift @segments;
+        }
+
+        # try to autodetect the program name
+        elsif( grep $_ =~ $action_re, @segments ) {
+            push @prefix, shift @segments
+                while @segments && $segments[0] !~ $action_re;
+            $self->program( pop @prefix );    # get the program name
+            shift @segments;    # drop the action name
+        }
+
+        # declare FAIL
+        else {
+            croak "Invalid URL $uri: no program segment found ($program)";
+        }
 
         # just keep the bits we need
         $self->server( $uri->host );
@@ -99,7 +120,7 @@ sub new {
     # create the object
     my $self = bless {}, $class;
 
-    # get attributes
+    # get the rest of attributes
     $self->$_( delete $args{$_} )
         for grep { exists $args{$_} } @attributes;
 
@@ -137,7 +158,7 @@ sub _uri_for {
         if $self->userinfo;
     $uri->host( $self->server );
     $uri->path( join '/', $self->prefix || (),
-        'mailman', $action, $self->list, @options );
+        $self->program, $action, $self->list, @options );
     return $uri;
 }
 
@@ -481,6 +502,14 @@ Note that the URI object returned by C<uri()> will show this information.
 Get or set the I<prefix> part of the web interface.
 (For the rare case when Mailman is not run from the top-level C</mailman/>
 URL.)
+
+=item program
+
+Get or set the I<program> name. The default is C<mailman>.
+Some servers define it to something else (e.g. SourceForge uses C<lists>.
+
+WWW::Mailman should usually be able to guess it. If not, you'll need
+to pass the C<program> parameter to the constructor, as a hint.
 
 =item list
 
