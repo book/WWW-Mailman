@@ -26,7 +26,7 @@ my @tests = map {
 
 my @fails = (
     [   'http://lists.example.com/' =>
-            q{^Invalid URL !uri: no 'mailman' segment }
+            q{^Invalid URL !uri: no program segment found \(mailman\) }
     ],
     [   'http://lists.example.com/mailman/' =>
             q{^Invalid URL !uri: no action }
