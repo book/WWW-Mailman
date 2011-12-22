@@ -1,5 +1,13 @@
 Revision history for WWW-Mailman
 
+1.05 Thu Dec 22 18:35:55 CET 2011
+        [IMPROVEMENTS]
+        - add support for Mailman installs that do not use /mailman/
+          in their URL (RT #73312)
+        - add a version() method
+        - enforce content-encoding to latin-1 when submitting forms,
+          to fix some double encoding issues
+
 1.04 Tue Apr  6 21:13:27 CEST 2010
         [PACKAGING]
         - more accurate prerequites

@@ -10,3 +10,4 @@ WWW-Mailman-.*
 ^cover_db/
 ^\.git
 mailman_credentials
+^MYMETA.yml$
