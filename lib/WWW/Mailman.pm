@@ -15,6 +15,8 @@ my @attributes = qw(
     email password moderator_password admin_password
 );
 
+my %default = ( program => 'mailman' );
+
 my $action_re = qr/^(?:admin(?:db)?|edithtml|listinfo|options|private)$/;
 
 #
@@ -26,7 +28,8 @@ for my $attr (@attributes) {
     no strict 'refs';
     *{$attr} = sub {
         my $self = shift;
-        return defined $self->{$attr} ? $self->{$attr} : '' if !@_;
+        return defined $self->{$attr} ? $self->{$attr} : $default{$attr} || ''
+            if !@_;
         return $self->{$attr} = shift;
     };
 }
@@ -116,9 +119,6 @@ sub new {
 
     # create the object
     my $self = bless {}, $class;
-
-    # we need a default value for 'program'
-    $args{program} = 'mailman' if !exists $args{program};
 
     # get the rest of attributes
     $self->$_( delete $args{$_} )
