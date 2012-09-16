@@ -67,16 +67,16 @@ BEGIN { $tests += 1 }
 
 # options() fails with no email
 $mm = mm();
-ok( !eval { $mm->options() }, 'options() fails with no credentials' );
 $url = $mm->_uri_for('options');
+ok( !eval { $mm->options() }, 'options() fails with no credentials' );
 like( $@, qr/Couldn't login on \Q$url\E/, 'Expected error message' );
 BEGIN { $tests += 2 }
 
 # options() fails with no password
 $mm = mm();
 $mm->email('user@example.com');
-ok( !eval { $mm->options() }, 'options() fails with no password' );
 $url = $mm->_uri_for( 'options', $mm->email );
+ok( !eval { $mm->options() }, 'options() fails with no password' );
 like( $@, qr/Couldn't login on \Q$url\E/, 'Expected error message' );
 BEGIN { $tests += 2 }
 
