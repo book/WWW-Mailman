@@ -6,6 +6,7 @@ use WWW::Mailman;
 my %config;
 
 # pickup the configuration information
+# from files
 if ( my @credentials = <mailman_credentials*> ) {
     for my $file (@credentials) {
         open my $fh, $file or die "Can't open $file: $!";
@@ -13,12 +14,12 @@ if ( my @credentials = <mailman_credentials*> ) {
         close $fh;
     }
 }
-else {
-    for my $key (qw( uri email password admin_password moderator_password )) {
-        my $env_key = uc "mailman_$key";
-        $config{'MAILMAN ENV'}{$key} = $ENV{$env_key}
-            if exists $ENV{$env_key};
-    }
+
+# from environment
+for my $key (qw( uri email password admin_password moderator_password )) {
+    my $env_key = uc "mailman_$key";
+    $config{'MAILMAN ENV'}{$key} = $ENV{$env_key}
+        if exists $ENV{$env_key};
 }
 
 # check we have enough information for testing
