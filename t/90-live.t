@@ -68,8 +68,12 @@ INFO
 # we can do live tests!
 plan tests => my $tests * keys %config;
 
+my %option;
+my @option_keys;
+my %admin;
+
 for my $list ( keys %config ) {
-    my %option = %{ $config{$list} };
+    %option = %{ $config{$list} };
 
     diag "testing $list";
 
@@ -106,20 +110,21 @@ for my $list ( keys %config ) {
 
     # options() for our user
 SKIP: {
-        $mm = mm( my $count, qw( email password ) );
+        $mm = mm( 2 + @option_keys, qw( email password ) );
         ok( eval { $got = $mm->options() }, 'options() with credentials' );
         is( ref $got, 'HASH', 'options returned as a HASH ref' );
-        ok( exists $got->{$_}, "options have key '$_'" ) for my @keys;
+        ok( exists $got->{$_}, "options have key '$_'" ) for @option_keys;
 
         BEGIN {
-            @keys = qw( fullname disablemail remind nodupes conceal );
-            $tests += $count = @keys + 2;
+            @option_keys = qw( fullname disablemail remind nodupes conceal );
+            $tests += @option_keys + 2;
         }
     }
 
     # try changing an option
 SKIP: {
-        $mm = mm( my $count, qw( email password ) );
+        BEGIN { $tests += 5 }
+        $mm = mm( 5, qw( email password ) );
         ok( eval { $got = $mm->options() }, 'options()' );
         my $new = ( my $old = $got->{conceal} ) ? '0' : '1';
         ok( eval { $got = $mm->options( { conceal => $new } ) },
@@ -130,63 +135,68 @@ SKIP: {
         is( $got->{conceal}, $old,
             "Changed back the value of 'conceal' option" );
         $conceal = $got->{conceal};
-        BEGIN { $tests += $count = 5 }
     }
 
     # check other subscriptions
 SKIP: {
-        $mm = mm( my $count, qw( email password ) );
+        BEGIN { $tests += 2 }
+        $mm = mm( 2, qw( email password ) );
         ok( eval { @subs = $mm->othersubs(); 1 }, 'othersubs()' );
         cmp_ok( scalar @subs, '>=', 1, 'At least one subscription' );
-        BEGIN { $tests += $count = 2 }
     }
 
     # check email resend
 SKIP: {
-        $mm = mm( my $count, qw( email ) );
+        BEGIN { $tests += 1 }
+        $mm = mm( 1, qw( email ) );
         diag "You may receive password reminders for @{[$mm->list]}. Sorry.";
         ok( eval { $mm->emailpw(); 1 }, 'emailpw() without password' );
-        BEGIN { $tests += $count = 1 }
     }
 
 SKIP: {
-        $mm = mm( my $count, qw( email password ) );
+        BEGIN { $tests += 1 }
+        $mm = mm( 1, qw( email password ) );
         ok( eval { $mm->emailpw(); 1 }, 'emailpw()' );
-        BEGIN { $tests += $count = 1 }
     }
 
 SKIP: {
-        $mm = mm( my $count, qw( email password ) );
+        BEGIN { $tests += 2 }
+        $mm = mm( 2, qw( email password ) );
         ok( eval { $mm->options(); 1 }, 'login through options()' );
         ok( eval { $mm->emailpw(); 1 }, 'emailpw() when logged in' );
-        BEGIN { $tests += $count = 2 }
     }
 
     # check roster
     # (with some power user access, just in case access is restricted)
 SKIP: {
-        $mm = mm( my $count, qw( email password moderator_password ) );
-        skip "Can't test roster() if our email is concealed", $count
+        BEGIN { $tests += 2 }
+        $mm = mm( 2, qw( email password moderator_password ) );
+        skip "Can't test roster() if our email is concealed", 2
             if $conceal;
         my @emails;
         ok( eval { @emails = $mm->roster(); 1 }, 'roster()' );
         ok( scalar( grep { $_ eq $option{email} } @emails ),
             'roster has at least our email' );
-        BEGIN { $tests += $count = 2 }
     }
 
 SKIP: {
-        $mm = mm( my $count, qw( admin_password ) );
+        BEGIN { $tests += 2 }
+        $mm = mm( 2, qw( admin_password ) );
         my @emails;
         ok( eval { @emails = $mm->roster(); 1 }, 'roster()' );
         ok( scalar( grep {/\@/} @emails ), 'roster has at least one email' );
-        BEGIN { $tests += $count = 2 }
     }
 
     # check some boolean admin options
 SKIP: {
-        $mm = mm( my $count, qw( admin_password ) );
-        my %admin;
+        BEGIN {
+            %admin = (
+                general => 'send_reminders',
+                bounce  => 'bounce_processing',
+            );
+            $tests += 5 * keys %admin;
+        }
+        $mm = mm( 5 * keys %admin, qw( admin_password ) );
         for my $section ( keys %admin ) {
             my $method = "admin_$section";
             ok( eval { $got = $mm->$method() }, "admin_$section()" );
@@ -201,14 +211,6 @@ SKIP: {
             );
             is( $got->{ $admin{$section} },
                 $old, "Changed back the value of '$admin{$section}' option" );
-        }
-
-        BEGIN {
-            %admin = (
-                general => 'send_reminders',
-                bounce  => 'bounce_processing',
-            );
-            $tests += $count = 5 * keys %admin;
         }
     }
 }
