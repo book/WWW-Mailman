@@ -184,10 +184,7 @@ sub _login_form {
                 || $self->moderator_password );
     }
 
-    # no authentication required
-    else {
-        $form = undef;
-    }
+    # otherwise, no authentication required
 
     return $form;
 }
