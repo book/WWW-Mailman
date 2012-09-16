@@ -29,7 +29,7 @@ if ( -e $credentials ) {
 # - MAILMAN_ADMIN_PASSWORD
 # - MAILMAN_MODERATOR_PASSWORD
 else {
-    for my $key qw( uri email password admin_password moderator_password ) {
+    for my $key (qw( uri email password admin_password moderator_password )) {
         my $env_key = uc "mailman_$key";
         $option{$key} = $ENV{$env_key} if exists $ENV{$env_key};
     }
