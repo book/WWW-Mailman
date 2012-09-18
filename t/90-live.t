@@ -116,6 +116,7 @@ for my $list ( keys %config ) {
 SKIP: {
         $mm = mm( 2 + @option_keys, qw( email password ) );
         ok( eval { $got = $mm->options() }, 'options() with credentials' );
+        diag $@ if $@;
         is( ref $got, 'HASH', 'options returned as a HASH ref' );
         ok( exists $got->{$_}, "options have key '$_'" ) for @option_keys;
 
@@ -130,12 +131,15 @@ SKIP: {
         BEGIN { $tests += 5 }
         $mm = mm( 5, qw( email password ) );
         ok( eval { $got = $mm->options() }, 'options()' );
+        diag $@ if $@;
         my $new = ( my $old = $got->{conceal} ) ? '0' : '1';
         ok( eval { $got = $mm->options( { conceal => $new } ) },
             "options( { conceal => $new } ) passes" );
+        diag $@ if $@;
         is( $got->{conceal}, $new, "Changed the value of 'conceal' option" );
         ok( eval { $got = $mm->options( { conceal => $old } ) },
             "options( { conceal => $old } ) passes" );
+        diag $@ if $@;
         is( $got->{conceal}, $old,
             "Changed back the value of 'conceal' option" );
         $conceal = $got->{conceal};
@@ -155,6 +159,7 @@ SKIP: {
         # test_othersubs: not defined or some number
         else {
             ok( eval { @subs = $mm->othersubs(); 1 }, 'othersubs()' );
+            diag $@ if $@;
             my $subs
                 = defined $option{test_othersubs}
                 ? $option{test_othersubs}
@@ -169,19 +174,23 @@ SKIP: {
         $mm = mm( 1, qw( email ) );
         diag "You may receive password reminders for @{[$mm->list]}. Sorry.";
         ok( eval { $mm->emailpw(); 1 }, 'emailpw() without password' );
+        diag $@ if $@;
     }
 
 SKIP: {
         BEGIN { $tests += 1 }
         $mm = mm( 1, qw( email password ) );
         ok( eval { $mm->emailpw(); 1 }, 'emailpw()' );
+        diag $@ if $@;
     }
 
 SKIP: {
         BEGIN { $tests += 2 }
         $mm = mm( 2, qw( email password ) );
         ok( eval { $mm->options(); 1 }, 'login through options()' );
+        diag $@ if $@;
         ok( eval { $mm->emailpw(); 1 }, 'emailpw() when logged in' );
+        diag $@ if $@;
     }
 
     # check roster
@@ -193,6 +202,7 @@ SKIP: {
             if $conceal;
         my @emails;
         ok( eval { @emails = $mm->roster(); 1 }, 'roster()' );
+        diag $@ if $@;
         ok( scalar( grep { $_ eq $option{email} } @emails ),
             'roster has at least our email' );
     }
@@ -202,6 +212,7 @@ SKIP: {
         $mm = mm( 2, qw( admin_password ) );
         my @emails;
         ok( eval { @emails = $mm->roster(); 1 }, 'roster()' );
+        diag $@ if $@;
         ok( scalar( grep {/\@/} @emails ), 'roster has at least one email' );
     }
 
@@ -222,11 +233,13 @@ SKIP: {
             ok( eval { $got = $mm->$method( { $admin{$section} => $new } ); },
                 "$method( { $admin{$section} => $new } ) passes"
             );
+            diag $@ if $@;
             is( $got->{ $admin{$section} },
                 $new, "Changed the value of '$admin{$section}' option" );
             ok( eval { $got = $mm->$method( { $admin{$section} => $old } ); },
                 "$method( { $admin{$section} => $old } ) passes"
             );
+            diag $@ if $@;
             is( $got->{ $admin{$section} },
                 $old, "Changed back the value of '$admin{$section}' option" );
         }
