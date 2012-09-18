@@ -65,6 +65,10 @@ INFO
     plan skip_all => 'No credentials available for live tests';
 }
 
+# it is also possible to add some extra keys prefixed by test_
+# to the mailman_credentials* files, to further influence testing
+# this is not documented further, read the test code!
+
 # we can do live tests!
 plan tests => my $tests * keys %config;
 
@@ -141,8 +145,22 @@ SKIP: {
 SKIP: {
         BEGIN { $tests += 2 }
         $mm = mm( 2, qw( email password ) );
-        ok( eval { @subs = $mm->othersubs(); 1 }, 'othersubs()' );
-        cmp_ok( scalar @subs, '>=', 1, 'At least one subscription' );
+
+        # test_othersubs: FAIL
+        if( $option{test_othersubs} =~ /FAIL/i ) {
+            ok( !eval { @subs = $mm->othersubs(); 1 }, 'othersubs() fails' );
+            like( $@, qr/^No clickable input with name othersubs /, 'Expected error message' );
+        }
+
+        # test_othersubs: not defined or some number
+        else {
+            ok( eval { @subs = $mm->othersubs(); 1 }, 'othersubs()' );
+            my $subs
+                = defined $option{test_othersubs}
+                ? $option{test_othersubs}
+                : 1;
+            cmp_ok( scalar @subs, '>=', $subs, "At least $subs subscription" );
+        }
     }
 
     # check email resend
