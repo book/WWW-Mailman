@@ -370,6 +370,12 @@ sub admindb {
     return _form_data( $mech->current_form );
 }
 
+sub admindb_msgid {
+    my ($self) = @_;
+    $self->_load_uri( $self->_uri_for('admindb') );
+    return map $_->url =~ /\?msgid=(\d+)/, $self->robot->links;
+}
+
 # most admin routines will be identical...
 sub admin {
     my ( $self, $section, $options ) = @_;
