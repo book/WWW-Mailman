@@ -631,6 +631,32 @@ This method doesn't require authentication.
 
 =back
 
+=head2 Moderator methods
+
+A moderator only deals with a single page, where pending subscription
+and unsubscription requests, as well as postings being held for approval
+are listed.
+
+The moderator methods are:
+
+=over 4
+
+=item admindb( [ $msgid ], [ \%options ] )
+
+Without parameter return the form options for the page.
+If a hash referecne is passed as a parameter, the given options will be filled.
+
+If C<$msgid> is provided, the I<details> page for the given message is processed,
+instead of the I<summary> page (which lists all held messages).
+
+Note: both parameters are optional, but if provided C<$msgid> must be first.
+
+=item admindb_msgid( )
+
+Return the list of the id of all held messages.
+
+=back
+
 =head2 Admin methods
 
 The following admin methods all have the same interface.
