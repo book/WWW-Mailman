@@ -351,11 +351,12 @@ sub roster {
 
 # moderator task
 sub admindb {
-    my ( $self, $options, $msgid ) = @_;
-    my $admindb = $self->_uri_for('admindb');
+    my ( $self, $msgid, $options ) = @_;
+    ( $options, $msgid ) = ($msgid) if ref $msgid;    # msgid is optional
 
     # get the main form
-    $self->_load_uri( $admindb );
+    $self->_load_uri(
+        $self->_uri_for( 'admindb', $msgid ? [ msgid => $msgid ] : () ) );
     my $mech = $self->robot;
     return if !$mech->form_number(1);
 
