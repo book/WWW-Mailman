@@ -320,7 +320,7 @@ sub othersubs {
 }
 
 sub roster {
-    my ( $self, %options ) = @_;
+    my ($self) = @_;
     my $mech = $self->robot;
     $self->_load_uri( $self->_uri_for('roster') );
 
