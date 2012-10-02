@@ -152,6 +152,7 @@ sub new {
 #
 sub _uri_for {
     my ( $self, $action, @options ) = @_;
+    my $query = ref $options[-1] eq 'ARRAY' && pop @options;
     my $uri = URI->new();
     $uri->scheme( $self->secure ? 'https' : 'http' );
     $uri->userinfo( $self->userinfo )
@@ -159,6 +160,7 @@ sub _uri_for {
     $uri->host( $self->server );
     $uri->path( join '/', $self->prefix || (),
         $self->program, $action, $self->list, @options );
+    $uri->query_form($query) if $query;
     return $uri;
 }
 

@@ -14,6 +14,7 @@ my @tests = (
     [ '!base/options/!list', 'options' ],
     [ '!base/admin/!list/privacy/sender', 'admin', 'privacy', 'sender' ],
     [ '!base/admindb/!list', 'admindb' ],
+    [ '!base/admindb/!list?msgid=1337', 'admindb', [ msgid => 1337 ] ],
 );
 
 plan tests => @base * @tests;
