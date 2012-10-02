@@ -347,6 +347,19 @@ sub roster {
         $mech->content =~ m{<li><a href[^>]*>([^<]*)</a>}g;
 }
 
+# moderator task
+sub admindb {
+    my ( $self, $options, $msgid ) = @_;
+    my $admindb = $self->_uri_for('admindb');
+
+    # get the main form
+    $self->_load_uri( $admindb );
+    my $mech = $self->robot;
+    return if !$mech->form_number(1);
+
+    return _form_data( $mech->current_form );
+}
+
 # most admin routines will be identical...
 sub admin {
     my ( $self, $section, $options ) = @_;
