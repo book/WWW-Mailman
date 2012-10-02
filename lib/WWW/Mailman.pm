@@ -360,6 +360,13 @@ sub admindb {
     my $mech = $self->robot;
     return if !$mech->form_number(1);
 
+    # change of options
+    if ($options) {
+        $mech->set_fields(%$options);
+        $mech->click();
+        $mech->form_number(1);
+    }
+
     return _form_data( $mech->current_form );
 }
 
