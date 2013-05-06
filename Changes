@@ -1,5 +1,11 @@
 Revision history for WWW-Mailman
 
+1.06 Tue May  7 2013
+        [TESTS]
+        - fix the test code for perl 5.17
+        - allow for several configuration files for live tests
+        - several minor test improvements
+
 1.05 Thu Dec 22 18:35:55 CET 2011
         [IMPROVEMENTS]
         - add support for Mailman installs that do not use /mailman/

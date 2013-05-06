@@ -19,3 +19,4 @@ t/11-_uri_for.t
 t/90-live.t
 t/pod-coverage.t
 t/pod.t
+META.json
