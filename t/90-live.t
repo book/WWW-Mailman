@@ -44,7 +44,7 @@ for my $list ( keys %config ) {
 if ( !keys %config ) {
     diag << 'INFO';
 To run these (hopefully) non-destructive tests against a Mailman account:
-either create one file matching mailman_credentials* per list,
+either create one or more files matching mailman_credentials* per list,
 with the following keys:
 - uri
 - email
