@@ -151,7 +151,9 @@ SKIP: {
         $mm = mm( 2, qw( email password ) );
 
         # test_othersubs: FAIL
-        if( $option{test_othersubs} =~ /FAIL/i ) {
+        if ( defined $option{test_othersubs}
+            && $option{test_othersubs} =~ /FAIL/i )
+        {
             ok( !eval { @subs = $mm->othersubs(); 1 }, 'othersubs() fails' );
             like( $@, qr/^No clickable input with name othersubs /, 'Expected error message' );
         }
