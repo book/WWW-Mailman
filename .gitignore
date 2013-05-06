@@ -11,3 +11,5 @@ pm_to_blib*
 WWW-Mailman-*
 cover_db
 mailman_credentials*
+META.*
+MYMETA.*
