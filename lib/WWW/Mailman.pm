@@ -8,8 +8,6 @@ use URI;
 use WWW::Mechanize;
 use HTTP::Cookies;
 
-our $VERSION = '1.06';
-
 my @attributes = qw(
     secure server prefix program list
     email password moderator_password admin_password
@@ -127,7 +125,7 @@ sub new {
     # bring in the robot if needed
     if ( !$self->robot ) {
         my %mech_options = (
-            agent => "WWW::Mailman/$VERSION",
+            agent => "WWW::Mailman/$WWW::Mailman::VERSION",
             stack_depth => 2,    # make it a Bear of Very Little Brain
             quiet       => 1,
             autocheck   => 0,    # Fancy my making a mistake like that
