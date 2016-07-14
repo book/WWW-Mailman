@@ -692,7 +692,7 @@ available and the privacy settings of the list.
 
 =item version( )
 
-Returm the Mailman version as printed at the bottom of all pages.
+Return the Mailman version as printed at the bottom of all pages.
 
 Whenever WWW::Mailman downloads a Mailman web page, it tries to obtain
 this version information.
