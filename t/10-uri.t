@@ -4,6 +4,8 @@ use Test::More;
 
 use WWW::Mailman;
 
+$WWW::Mailman::VERSION ||= 'undefined';
+
 # generate all possible combinations
 my @tests =
     [   'https://lists.sourceforge.net/lists/listinfo/backuppc-users/' => {

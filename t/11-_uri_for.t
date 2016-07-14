@@ -4,6 +4,8 @@ use Test::More;
 
 use WWW::Mailman;
 
+$WWW::Mailman::VERSION ||= 'undefined';
+
 my @base = (
     'http://lists.example.com/mailman',
     'https://lists.example.com/mailman',

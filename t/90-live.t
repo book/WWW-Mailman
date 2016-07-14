@@ -5,6 +5,8 @@ use WWW::Mailman;
 
 my %config;
 
+$WWW::Mailman::VERSION ||= 'undefined';
+
 # pickup the configuration information
 # from files
 if ( my @credentials = <mailman_credentials*> ) {
