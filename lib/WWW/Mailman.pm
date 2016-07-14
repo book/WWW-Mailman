@@ -82,6 +82,11 @@ sub uri {
     return $uri;
 }
 
+sub archive_mbox_uri {
+    my $self = shift;
+    return $self->__uri_for( private => ( $self->list . '.mbox' ) x 2 );
+}
+
 sub userinfo {
     my $self = shift;
     return defined $self->{userinfo} ? $self->{userinfo} : '' if !@_;
@@ -691,6 +696,13 @@ Returm the Mailman version as printed at the bottom of all pages.
 
 Whenever WWW::Mailman downloads a Mailman web page, it tries to obtain
 this version information.
+
+=item archive_mbox_uri( )
+
+Return the URI of the mbox containing the whole mailing-list archive.
+
+If archival is not configured for that mailing-list, querying this URI
+will return a 404.
 
 =back
 
