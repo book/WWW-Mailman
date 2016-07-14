@@ -150,16 +150,20 @@ sub new {
 #
 # PRIVATE METHODS
 #
-sub _uri_for {
-    my ( $self, $action, @options ) = @_;
+sub __uri_for {
+    my ( $self, @parts ) = @_;
     my $uri = URI->new();
     $uri->scheme( $self->secure ? 'https' : 'http' );
     $uri->userinfo( $self->userinfo )
         if $self->userinfo;
     $uri->host( $self->server );
-    $uri->path( join '/', $self->prefix || (),
-        $self->program, $action, $self->list, @options );
+    $uri->path( join '/', $self->prefix || (), $self->program, @parts );
     return $uri;
+}
+
+sub _uri_for {
+    my ( $self, $action, @options ) = @_;
+    return $self->__uri_for( $action, $self->list, @options )
 }
 
 sub _login_form {
