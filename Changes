@@ -2,6 +2,12 @@ Revision history for WWW-Mailman
 
 {{$NEXT}}
 
+1.061 2016-07-23 BOOK
+    [FEATURES]
+    - archive_mbox_uri returns the URI for the full mbox archive (if any)
+    [PACKAGING]
+    - switched to dzil for packaging
+
 1.06 2013-05-07 BOOK
     [TESTS]
     - fix the test code for perl 5.17
