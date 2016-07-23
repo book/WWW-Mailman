@@ -5,6 +5,8 @@ use WWW::Mailman;
 use File::Temp qw( tempdir );
 use File::Spec;
 
+$WWW::Mailman::VERSION ||= 'undefined';
+
 plan tests => 6;
 
 ok( !eval { WWW::Mailman->new( bonk => 'zlonk' ); 1 },
