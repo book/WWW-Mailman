@@ -1,5 +1,7 @@
 Revision history for WWW-Mailman
 
+{{$NEXT}}
+
 1.06 2013-05-07 BOOK
         [TESTS]
         - fix the test code for perl 5.17
