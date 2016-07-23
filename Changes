@@ -1,12 +1,12 @@
 Revision history for WWW-Mailman
 
-1.06 Tue May  7 2013
+1.06 2013-05-07 BOOK
         [TESTS]
         - fix the test code for perl 5.17
         - allow for several configuration files for live tests
         - several minor test improvements
 
-1.05 Thu Dec 22 18:35:55 CET 2011
+1.05 2011-12-22 BOOK
         [IMPROVEMENTS]
         - add support for Mailman installs that do not use /mailman/
           in their URL (RT #73312)
@@ -14,17 +14,17 @@ Revision history for WWW-Mailman
         - enforce content-encoding to latin-1 when submitting forms,
           to fix some double encoding issues
 
-1.04 Tue Apr  6 21:13:27 CEST 2010
+1.04 2010-04-06 BOOK
         [PACKAGING]
         - more accurate prerequites
 
-1.03 Thu Apr  1 23:20:14 CEST 2010
+1.03 2010-04-01 BOOK
         [IMPROVEMENTS]
         - better support for sites behind HTTP authentication
         [EXAMPLES]
         - mm_roster (forgotten in v1.01)
 
-1.02 Tue Mar 30 00:04:34 CEST 2010
+1.02 2010-03-30 BOOK
         [FEATURES]
         - new method: admin()
         - admin() is the entry point for a bunch of other methods:
@@ -35,13 +35,13 @@ Revision history for WWW-Mailman
         [TESTS]
         - live test for some admin methods
 
-1.01 Sun Mar 28 11:17:38 CEST 2010
+1.01 2010-03-28 BOOK
         [FEATURES]
         - new method: roster()
         [TESTS]
         - live test for roster()
 
-1.00 Thu Mar 25 10:27:28 CET 2010
+1.00 2010-03-25 BOOK
         [FEATURES]
         - basic features: constructor, accessors
         - autologin, cookie management
